@@ -82,7 +82,7 @@ class App extends React.Component {
     }
 
     resetGame = () => {
-        this.setState({});
+        this.setState({name: ''});
         localStorage.removeItem("heroData");
     }
 
