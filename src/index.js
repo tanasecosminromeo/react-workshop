@@ -6,34 +6,93 @@ import ReactDOM from "react-dom";
 import classNames from 'classnames';
 import "./troll.css"
 
+class TheBigBoss extends React.Component {
+    componentWillMount(){
+        let ID = Math.floor(Math.random(30)) + 1;
+        fetch(`http://swapi.co/api/species/${ID}/`)
+            .then(raw => raw.json())
+            .then((res) => {
+                this.setState(res);
+            })
+    }
+
+    render(){
+        if (!this.state) return null;
+
+        //console.log("Big Bo$$", this.state);
+        let bossLife = Math.min(parseInt(this.state.average_height) || (Math.random(50) + 100), 150);
+        let bossColor = this.state.eye_colors.split(",")[0];
+        let bossDamage = bossLife / 10;
+
+        return (
+            <div
+                style={{
+                    fontSize: bossLife/5,
+                    color: bossColor
+                }}
+            >
+                <Troll heroData={this.props.heroData}
+                    adjustForestLife={this.adjustForestLife}
+                    getDamageFromTroll={this.props.getDamageFromTroll}
+                    key={this.state.name}
+                    name={this.state.name}
+                    life={bossLife}
+                    damage={bossDamage}
+                    color={bossColor}
+                />
+            </div>
+        )
+    }
+}
+
 
 class Troll extends React.Component {
     constructor(props) {
         super(props);
 
         let trollAscii = ['༼∵༽','༼⍨༽','༼⍢༽','༼⍤༽'];
-        let maxLife    = Math.floor(Math.random() * 81)+20
+        let maxLife    = props.life || Math.floor(Math.random() * 81)+20
 
         this.state = {
             troll: trollAscii[Math.floor(Math.random()*4)],
             maxLife: maxLife,
             currentLife: maxLife,
-            damage: Math.floor(Math.random() * 5) + 1,
+            damage: props.damage || Math.floor(Math.random() * 5) + 1,
             theVictoriousTroll: false
         }
     }
+
+    /*componentDidMount(){ // Nu e bindiuit, ca e autobinded!
+        this.props.adjustForestLife({ //O data aparut troll-ul padurea stie cine e
+            name: this.props.name,
+            life: this.state.currentLife
+        });
+    }
+
+    componentDidUpdate(){ // Nu e bindiuit, ca e autobinded!
+        this.props.adjustForestLife({
+            name: this.props.name, //Cand ii da boss in cap, crapa
+            life: this.state.currentLife
+        });
+    }*/
 
     paladinAttackTroll = () => {
         if (this.interval || this.props.heroData.life<=0) return;
 
         this.interval = setInterval(() => {
-            if (this.props.heroData.life<=0) return;
+            if (this.props.heroData.life<=0) {
+                if (this.props.heroData.life<0){
+                    this.props.heroData.life = 0;
+                }
+                return;
+            }
             console.log("troll ", this.state);
 
             let nextTrollLife = this.state.currentLife - this.props.heroData.damage * Math.floor(Math.random() * 4);
 
             if (nextTrollLife<=0){
                 nextTrollLife = 0;
+                this.props.improveHeroStats(this.state);
                 clearInterval(this.interval);
             }
 
@@ -42,7 +101,7 @@ class Troll extends React.Component {
             });
 
             setTimeout(() => {
-                this.props.getDamageFromTroll(this.state.damage, () => {
+                this.props.getDamageFromTroll(this.state.damage + Math.floor(Math.random() * 2), () => {
                     clearInterval(this.interval);
                     this.setState({
                         theVictoriousTroll: true
@@ -65,7 +124,9 @@ class Troll extends React.Component {
         return (
             <div
                 onClick={this.paladinAttackTroll}
-                className={extraClass}>
+                className={extraClass}
+                style={{color: this.props.color}} //If undefined, react is cool and doesn't add it
+            >
                 <div className="ascii">{this.state.troll}</div>
                 <div className="name">{this.props.name}</div>
                 <div className="life">{this.state.currentLife}</div>
@@ -79,25 +140,57 @@ class ForbiddenForest extends React.Component {
         super(props);
 
         this.state = {
-            trolls: ['Kazraz', 'Wonulkaz', 'Trezumike', 'Zol\'Sora', 'Raknanju', 'Mugnanlai', 'Zaliznay', 'Uthelumijo', 'Anoji', 'Gul\'Ojin']
+            trolls: ['Kazraz', 'Wonulkaz', 'Trezumike', 'Zol\'Sora', 'Raknanju', 'Mugnanlai', 'Zaliznay', 'Uthelumijo', 'Anoji', 'Gul\'Ojin'],
+            currentLife: 0
         }
+
+        this.totalLife = {};
+    }
+
+    //troll = {name: 'Kazraz', life: 35}
+    adjustForestLife = (troll) => {
+        this.totalLife[troll.name] = troll.life
+
+        let totalLifeCount = 0;
+        Object.keys(this.totalLife).forEach((trollName) => {
+           totalLifeCount += this.totalLife[trollName];
+        });
+
+        this.setState({
+            life: totalLifeCount
+        });
+    }
+
+    markBossAsActive = () => {
+        this.setState({
+            bossIsActive: true
+        });
     }
 
     render (){
-        console.log('Available Trolls', this.state.trolls);
+        //console.log('Available Trolls', this.state.trolls);
 
         let trollsInForest = this.state.trolls.map(
             (name) => <Troll heroData={this.props.heroData}
+                             adjustForestLife={this.adjustForestLife}
                              getDamageFromTroll={this.props.getDamageFromTroll}
                              key={name}
                              name={name}
+                             improveHeroStats={this.props.improveHeroStats}
                         />
         )
 
         return (
             <div>
-                <h5>This is the forbidden forest</h5>
+                <h5>This is the forbidden forest (Total Troll Life: {this.state.currentLife})</h5>
                 <div>{trollsInForest}</div>
+
+                <TheBigBoss heroData={this.props.heroData}
+                               adjustForestLife={this.adjustForestLife}
+                               getDamageFromTroll={this.props.getDamageFromTroll}
+                               key={name}
+                               name={name}
+                    />
             </div>
         )
     }
@@ -175,6 +268,7 @@ class App extends React.Component {
 
     getDamageFromTroll = (damage, callback) => {
         if (this.state.life <= 0){
+            callback();
             return false;
         }
 
@@ -199,15 +293,15 @@ class App extends React.Component {
         let hero = e.target;
         let heroType = hero.herotype.value;
         let damage = 10;
-        let healingPoints = 3;
+        let healingPoints = 1.3;
 
         if ( heroType === 'paladin' ) {
             damage = 8;
-            healingPoints = 5;
+            healingPoints = 2.5;
         }
         if ( heroType === 'wizard' ) {
             damage = 4;
-            healingPoints = 8;
+            healingPoints = 3.8;
         }
 
         const heroData = {
@@ -215,8 +309,10 @@ class App extends React.Component {
             difficultly: hero.difficultly.value,
             type: hero.herotype.value,
             life: Math.floor(100 / hero.difficultly.value),
+            maxLife: Math.floor(100 / hero.difficultly.value),
             damage: damage,
-            healingPoints: healingPoints
+            healingPoints: healingPoints,
+            isDead: false
         }
 
         localStorage.setItem('heroData', JSON.stringify(heroData));
@@ -226,23 +322,32 @@ class App extends React.Component {
     }
 
     resetGame = () => {
-        this.setState({name: ''});
+        this.setState({name: '', isInForrest: false});
         localStorage.removeItem("heroData");
     }
 
     setHealingInterval = () => {
         this.healingInterval = setInterval( () => {
-            if (this.state.life==100) return;
+            if (this.state.life===this.state.maxLife || this.state.isDead) return;
 
             let nextLife = this.state.life + this.state.healingPoints;
-            if (nextLife > 100){
-                nextLife = 100;
+            if (nextLife > this.state.maxLife){
+                nextLife = this.state.maxLife;
             }
 
             this.setState({
                 life: nextLife
             })
         }, 1000);
+    }
+
+    improveHeroStats = (troll) => {
+        this.setState({
+           damage: this.state.damage + 1,
+           maxLife: this.state.maxLife + troll.maxLife / 2,
+           healingPoints: this.state.healingPoints + 0.1,
+           life: this.state.life + 20
+        });
     }
 
     sendHeroToForrest = () => {
@@ -274,6 +379,7 @@ class App extends React.Component {
                     ? <ForbiddenForest
                         heroData={this.state}
                         getDamageFromTroll={this.getDamageFromTroll}
+                        improveHeroStats={this.improveHeroStats}
                       >
 
                       </ForbiddenForest>

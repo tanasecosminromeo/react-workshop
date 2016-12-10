@@ -24,19 +24,19 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="234" column="45" lean-forward="false" selection-start-line="234" selection-start-column="45" selection-end-line="234" selection-end-column="45" />
+            <state relative-caret-position="2445">
+              <caret line="163" column="30" lean-forward="true" selection-start-line="163" selection-start-column="30" selection-end-line="163" selection-end-column="30" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#55#81#0" expanded="true" />
-                <marker date="1481372399000" expanded="true" signature="3379:4207" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="3451:3481" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="3597:3734" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="3779:4002" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="4367:4695" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="7162:8079" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="7314:7513" ph="..." />
-                <marker date="1481372399000" expanded="true" signature="7551:7715" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="6481:7309" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="6553:6583" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="6699:6836" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="6881:7104" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="7469:7797" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="10748:11730" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="10900:11099" ph="..." />
+                <marker date="1481377582000" expanded="true" signature="11137:11301" ph="..." />
               </folding>
             </state>
           </provider>
@@ -45,8 +45,8 @@
       <file leaf-file-name="troll.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/troll.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="19" />
+            <state relative-caret-position="120">
+              <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="9" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -67,6 +67,8 @@
       <find>state.name</find>
       <find>ForbiddenForest</find>
       <find>getDamageFromTroll</find>
+      <find>100</find>
+      <find>adjustForestLife</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -225,12 +227,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1481358300448</updated>
-      <workItem from="1481358303504" duration="10876000" />
+      <workItem from="1481358303504" duration="15188000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10876000" />
+    <option name="totallyTimeSpent" value="15188000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -296,27 +298,27 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/troll.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="19" />
+        <state relative-caret-position="120">
+          <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="9" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="234" column="45" lean-forward="false" selection-start-line="234" selection-start-column="45" selection-end-line="234" selection-end-column="45" />
+        <state relative-caret-position="2445">
+          <caret line="163" column="30" lean-forward="true" selection-start-line="163" selection-start-column="30" selection-end-line="163" selection-end-column="30" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#55#81#0" expanded="true" />
-            <marker date="1481372399000" expanded="true" signature="3379:4207" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="3451:3481" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="3597:3734" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="3779:4002" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="4367:4695" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="7162:8079" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="7314:7513" ph="..." />
-            <marker date="1481372399000" expanded="true" signature="7551:7715" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="6481:7309" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="6553:6583" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="6699:6836" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="6881:7104" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="7469:7797" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="10748:11730" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="10900:11099" ph="..." />
+            <marker date="1481377582000" expanded="true" signature="11137:11301" ph="..." />
           </folding>
         </state>
       </provider>

@@ -19,7 +19,7 @@ body {
 }
 
 .troll.wounded .name {
-    color: yellow;;
+    color: yellow;
 }
 
 .troll.dead .name {
