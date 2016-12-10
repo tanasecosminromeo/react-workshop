@@ -3,6 +3,7 @@
  */
 import React from "react";
 import ReactDOM from "react-dom";
+import classNames from 'classnames';
 import "./troll.css"
 
 
@@ -21,17 +22,15 @@ class Troll extends React.Component {
     }
 
     render() {
-        let extraClass = '';
-        if (this.state.maxLife===this.state.currentLife){
-            extraClass = 'well';
-        } else if (this.state.maxLife>this.state.currentLife && this.state.currentLife>0){
-            extraClass = 'wounded';
-        } else {
-            extraClass = 'dead';
-        }
+        let extraClass = classNames('troll',
+            {
+                well: this.state.maxLife===this.state.currentLife,
+                wounded: this.state.maxLife>this.state.currentLife,
+                dead: !this.state.currentLife,
+            });
 
         return (
-            <span className={"troll " + extraClass}>
+            <span className={extraClass}>
                 <div className="ascii">{this.state.troll}</div>
                 <div className="name">{this.props.name}</div>
                 <div className="life">{this.state.currentLife}</div>
