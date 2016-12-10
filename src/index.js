@@ -5,7 +5,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
-//Refactor in Webstorm (sper ca si altele) cand dai rename la o clasa/variabila/etc schimba peste tot
 class HeroComponent extends React.Component {
     render() {
         return (
@@ -25,6 +24,21 @@ class HeroComponent extends React.Component {
 
                     <input type="submit" placeholder="Submit" />
                 </form>
+            </div>
+        );
+    }
+
+}
+
+class HeroDetails extends React.Component {
+    render() {
+        let heroData = this.props.heroData;
+
+        return (
+            <div>
+                <div>Name: {heroData.name}</div>
+                <div>Class: {heroData.type}</div>
+                <div>Life: {heroData.life}</div>
             </div>
         );
     }
@@ -65,12 +79,11 @@ class App extends React.Component {
 
                 {
                     this.state.name
-                ? 'Avem eroul setat'
-                :
-                    <HeroComponent
+                    ? <HeroDetails heroData={this.state}></HeroDetails>
+                    : <HeroComponent
                         createHero={this.createHero}
                         isSuperman={this.state.isSuperman}
-                    ><h2>Create hero:</h2></HeroComponent>
+                      ><h2>Create hero:</h2></HeroComponent>
                 }
             </div>
         );
