@@ -6,11 +6,18 @@ import ReactDOM from 'react-dom';
 
 
 class HeroComponent extends React.Component {
+    componentWillUnmount(){
+        let heroName = this.form.name.value; //Folosim referinta pentru ca nu exista inca componenta [sau ceva]
+        alert(`Good luck ${heroName}!`)
+    }
+
     render() {
         return (
             <div>
                 <div>{this.props.children}</div>
-                <form onSubmit={this.props.createHero}>
+                <form
+                    ref={(ref) => { this.form = ref; }}
+                    onSubmit={this.props.createHero}>
                     <input required
                            name="name"
                            type="text"
@@ -39,6 +46,7 @@ class HeroDetails extends React.Component {
                 <div>Name: {heroData.name}</div>
                 <div>Class: {heroData.type}</div>
                 <div>Life: {heroData.life}</div>
+                <button onClick={this.props.resetGame}>Reset Game</button>
             </div>
         );
     }
@@ -53,8 +61,6 @@ class App extends React.Component {
         if (heroData){
             heroData = JSON.parse(heroData);
             this.setState(heroData);
-        } else {
-            this.setState({});
         }
     }
 
@@ -75,6 +81,11 @@ class App extends React.Component {
         this.setState(heroData);
     }
 
+    resetGame = () => {
+        this.setState({});
+        localStorage.removeItem("heroData");
+    }
+
     render() { //Singura functie mandatory
         console.log('heroData', this.state);
 
@@ -83,11 +94,14 @@ class App extends React.Component {
                 <h1 className="hello">Who r u bro?</h1>
 
                 {
-                    this.state.name
-                    ? <HeroDetails heroData={this.state}></HeroDetails>
+                    this.state && this.state.name
+                    ? <HeroDetails
+                        heroData={this.state}
+                        resetGame={this.resetGame}
+                    ></HeroDetails>
                     : <HeroComponent
                         createHero={this.createHero}
-                        isSuperman={this.state.isSuperman}
+                        resetGame={this.resetGame}
                       ><h2>Create hero:</h2></HeroComponent>
                 }
             </div>
