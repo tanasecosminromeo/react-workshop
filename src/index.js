@@ -1,9 +1,57 @@
 /**
  * Created by tanasecosminromeo on 10/12/2016.
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./troll.css"
 
+
+class Troll extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let trollAscii = ['༼∵༽','༼⍨༽','༼⍢༽','༼⍤༽'];
+
+        this.state = {
+            troll: trollAscii[Math.floor(Math.random()*4)],
+            currentLife: Math.floor(Math.random() * 21)
+        }
+    }
+
+    render() {
+
+        return (
+            <span style={{color: 'red'}} className="troll">
+                <div className="ascii">{this.state.troll}</div>
+                <div className="name">{this.props.name}</div>
+                <div className="life">{this.state.currentLife}</div>
+            </span>
+        )
+    }
+}
+
+class ForbiddenForest extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            trolls: ['Kazraz', 'Wonulkaz', 'Trezumike', 'Zol\'Sora', 'Raknanju', 'Mugnanlai', 'Zaliznay', 'Uthelumijo', 'Anoji', 'Gul\'Ojin']
+        }
+    }
+
+    render (){
+        console.log('Available Trolls', this.state.trolls);
+
+        let trollsInForest = this.state.trolls.map((name) => <Troll key={name} name={name} />)
+
+        return (
+            <div>
+                <h5>This is the forbidden forest</h5>
+                <div>{trollsInForest}</div>
+            </div>
+        )
+    }
+}
 
 class HeroComponent extends React.Component {
     componentWillUnmount(){
@@ -43,10 +91,12 @@ class HeroDetails extends React.Component {
 
         return (
             <div>
+                <button onClick={this.props.resetGame}>Reset Game</button>
                 <div>Name: {heroData.name}</div>
                 <div>Class: {heroData.type}</div>
                 <div>Life: {heroData.life}</div>
-                <button onClick={this.props.resetGame}>Reset Game</button>
+
+                <button onClick={this.props.sendHeroToForrest}>goto forest;</button>
             </div>
         );
     }
@@ -54,6 +104,14 @@ class HeroDetails extends React.Component {
 }
 
 class App extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            name: '',
+            isInForrest: false
+        }
+    }
 
     componentWillMount(){
         let heroData = localStorage.getItem('heroData');
@@ -86,6 +144,10 @@ class App extends React.Component {
         localStorage.removeItem("heroData");
     }
 
+    sendHeroToForrest = () => {
+        this.setState({isInForrest: true});
+    }
+
     render() { //Singura functie mandatory
         console.log('heroData', this.state);
 
@@ -94,15 +156,23 @@ class App extends React.Component {
                 <h1 className="hello">Who r u bro?</h1>
 
                 {
-                    this.state && this.state.name
+                    this.state.name
                     ? <HeroDetails
                         heroData={this.state}
                         resetGame={this.resetGame}
+                        sendHeroToForrest={this.sendHeroToForrest}
                     ></HeroDetails>
                     : <HeroComponent
                         createHero={this.createHero}
                         resetGame={this.resetGame}
                       ><h2>Create hero:</h2></HeroComponent>
+                }
+
+                {
+                    this.state.isInForrest
+                    ? <ForbiddenForest
+                      ></ForbiddenForest>
+                    : null
                 }
             </div>
         );
