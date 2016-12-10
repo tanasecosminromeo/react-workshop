@@ -12,13 +12,45 @@ class Troll extends React.Component {
         super(props);
 
         let trollAscii = ['༼∵༽','༼⍨༽','༼⍢༽','༼⍤༽'];
-        let maxLife    = Math.floor(Math.random() * 16)+5
+        let maxLife    = Math.floor(Math.random() * 81)+20
 
         this.state = {
             troll: trollAscii[Math.floor(Math.random()*4)],
             maxLife: maxLife,
-            currentLife: maxLife
+            currentLife: maxLife,
+            damage: Math.floor(Math.random() * 5) + 1,
+            theVictoriousTroll: false
         }
+    }
+
+    paladinAttackTroll = () => {
+        if (this.interval || this.props.heroData.life<=0) return;
+
+        this.interval = setInterval(() => {
+            if (this.props.heroData.life<=0) return;
+            console.log("troll ", this.state);
+
+            let nextTrollLife = this.state.currentLife - this.props.heroData.damage * Math.floor(Math.random() * 4);
+
+            if (nextTrollLife<=0){
+                nextTrollLife = 0;
+                clearInterval(this.interval);
+            }
+
+            this.setState({
+                currentLife: nextTrollLife
+            });
+
+            setTimeout(() => {
+                this.props.getDamageFromTroll(this.state.damage, () => {
+                    clearInterval(this.interval);
+                    this.setState({
+                        theVictoriousTroll: true
+                    })
+                });
+            }, Math.floor(Math.random() * 600) + 250);
+
+        }, 600);
     }
 
     render() {
@@ -27,14 +59,17 @@ class Troll extends React.Component {
                 well: this.state.maxLife===this.state.currentLife,
                 wounded: this.state.maxLife>this.state.currentLife,
                 dead: !this.state.currentLife,
+                victorious: this.state.theVictoriousTroll
             });
 
         return (
-            <span className={extraClass}>
+            <div
+                onClick={this.paladinAttackTroll}
+                className={extraClass}>
                 <div className="ascii">{this.state.troll}</div>
                 <div className="name">{this.props.name}</div>
                 <div className="life">{this.state.currentLife}</div>
-            </span>
+            </div>
         )
     }
 }
@@ -51,7 +86,13 @@ class ForbiddenForest extends React.Component {
     render (){
         console.log('Available Trolls', this.state.trolls);
 
-        let trollsInForest = this.state.trolls.map((name) => <Troll key={name} name={name} />)
+        let trollsInForest = this.state.trolls.map(
+            (name) => <Troll heroData={this.props.heroData}
+                             getDamageFromTroll={this.props.getDamageFromTroll}
+                             key={name}
+                             name={name}
+                        />
+        )
 
         return (
             <div>
@@ -128,24 +169,60 @@ class App extends React.Component {
         if (heroData){
             heroData = JSON.parse(heroData);
             this.setState(heroData);
+            this.setHealingInterval();
         }
+    }
+
+    getDamageFromTroll = (damage, callback) => {
+        if (this.state.life <= 0){
+            return false;
+        }
+
+        console.log("hero", this.state);
+        let nextHeroLife = this.state.life - damage;
+
+        if (nextHeroLife <= 0){
+            alert("You have died :(\nNo one left to save us :(");
+            clearInterval(this.healingInterval);
+            callback();
+        }
+
+        this.setState({
+            life: nextHeroLife<0?0:nextHeroLife,
+            isDead: !nextHeroLife
+        });
     }
 
     createHero = (e) => {
         e.preventDefault();
 
         let hero = e.target;
+        let heroType = hero.herotype.value;
+        let damage = 10;
+        let healingPoints = 3;
+
+        if ( heroType === 'paladin' ) {
+            damage = 8;
+            healingPoints = 5;
+        }
+        if ( heroType === 'wizard' ) {
+            damage = 4;
+            healingPoints = 8;
+        }
 
         const heroData = {
             name: hero.name.value,
             difficultly: hero.difficultly.value,
             type: hero.herotype.value,
-            life: Math.floor(100 / hero.difficultly.value)
+            life: Math.floor(100 / hero.difficultly.value),
+            damage: damage,
+            healingPoints: healingPoints
         }
 
         localStorage.setItem('heroData', JSON.stringify(heroData));
 
         this.setState(heroData);
+        this.setHealingInterval();
     }
 
     resetGame = () => {
@@ -153,11 +230,26 @@ class App extends React.Component {
         localStorage.removeItem("heroData");
     }
 
+    setHealingInterval = () => {
+        this.healingInterval = setInterval( () => {
+            if (this.state.life==100) return;
+
+            let nextLife = this.state.life + this.state.healingPoints;
+            if (nextLife > 100){
+                nextLife = 100;
+            }
+
+            this.setState({
+                life: nextLife
+            })
+        }, 1000);
+    }
+
     sendHeroToForrest = () => {
         this.setState({isInForrest: true});
     }
 
-    render() { //Singura functie mandatory
+    render() {
         console.log('heroData', this.state);
 
         return (
@@ -180,7 +272,11 @@ class App extends React.Component {
                 {
                     this.state.isInForrest
                     ? <ForbiddenForest
-                      ></ForbiddenForest>
+                        heroData={this.state}
+                        getDamageFromTroll={this.getDamageFromTroll}
+                      >
+
+                      </ForbiddenForest>
                     : null
                 }
             </div>
