@@ -11,17 +11,27 @@ class Troll extends React.Component {
         super(props);
 
         let trollAscii = ['༼∵༽','༼⍨༽','༼⍢༽','༼⍤༽'];
+        let maxLife    = Math.floor(Math.random() * 16)+5
 
         this.state = {
             troll: trollAscii[Math.floor(Math.random()*4)],
-            currentLife: Math.floor(Math.random() * 21)
+            maxLife: maxLife,
+            currentLife: maxLife
         }
     }
 
     render() {
+        let extraClass = '';
+        if (this.state.maxLife===this.state.currentLife){
+            extraClass = 'well';
+        } else if (this.state.maxLife>this.state.currentLife && this.state.currentLife>0){
+            extraClass = 'wounded';
+        } else {
+            extraClass = 'dead';
+        }
 
         return (
-            <span style={{color: 'red'}} className="troll">
+            <span className={"troll " + extraClass}>
                 <div className="ascii">{this.state.troll}</div>
                 <div className="name">{this.props.name}</div>
                 <div className="life">{this.state.currentLife}</div>
@@ -153,7 +163,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <h1 className="hello">Who r u bro?</h1>
+                <h1 className="hello">Heroes and Trolls</h1>
 
                 {
                     this.state.name

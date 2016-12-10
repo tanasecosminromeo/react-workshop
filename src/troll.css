@@ -1,3 +1,26 @@
+body {
+    background: #333;
+    color: #fff;
+}
+
 .troll {
-    color: blue;
+    display: inline-block;
+    margin: 15px;
+    text-align: center;
+}
+
+.troll .name, .troll .life {
+    font-size: 8px;
+}
+
+.troll.well .name {
+    color: green;
+}
+
+.troll.wounded .name {
+    color: yellow;;
+}
+
+.troll.dead .name {
+    color: red;
 }
