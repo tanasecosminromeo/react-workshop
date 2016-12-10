@@ -62,11 +62,16 @@ class App extends React.Component {
         return (
             <div>
                 <h1 className="hello">Hello, {this.state.name}</h1>
-                <div>Is {this.state.name} superman? {this.state.isSuperman?"YES":"No :("}</div>
-                <HeroComponent
-                    createHero={this.createHero}
-                    isSuperman={this.state.isSuperman}
-                ><h2>Edit Component:</h2></HeroComponent>
+
+                {
+                    this.state.name
+                ? 'Avem eroul setat'
+                :
+                    <HeroComponent
+                        createHero={this.createHero}
+                        isSuperman={this.state.isSuperman}
+                    ><h2>Create hero:</h2></HeroComponent>
+                }
             </div>
         );
     }
