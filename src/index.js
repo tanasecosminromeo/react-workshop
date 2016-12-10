@@ -56,7 +56,12 @@ class App extends React.Component {
     }
 
     componentWillMount(){
-        //Apare o data, inainte de render, doar prima data! Se foloseste de obicei in cazul in care vrem sa modificam state-uri default sau sa facem request catre server
+        let heroData = localStorage.getItem('heroData');
+
+        if (heroData){
+            heroData = JSON.parse(heroData);
+            this.setState(heroData);
+        }
     }
 
     createHero = (e) => {
@@ -94,29 +99,6 @@ class App extends React.Component {
             </div>
         );
     }
-
-    componentDidMount(){
-        //Se face dupa ce se randeaza. Useful dupa ce se randeaza. Listener de scroll/on click/etc
-    }
-
-    componentWillUnmount(){
-        //Se apeleaza fix inainte ca si compoenta sa se distruga. Useful pentru cleanup: Eg: Stergem intervale / etc
-    }
-
-    componentWillReceiveProps(nextProps){
-        //Functie care se apeleaza cand se primesc props-uri noi de la parinte (eg: re-render, etc). Cand se foloseste cand in functie de props vrem sau nu sa schimbam state-uri
-    }
-
-    shouldComponentUpdate(nextProps, nextState){
-        //Eg: daca moare eroul, faci render. Se da return la true/false (true face render.. false you got it) Practic e bine cand "scurcircuitezi" update-ul la child
-    }
-
-    componentDidUpdate(){
-        //Se apeleaza imediat dupa update, aka dupa ce se face render. Se apeleaza DOAR daca se face re-render, dupa ce s-a facut prima data. Eg: Did Mount prima data - Asta next times
-    }
-
-    
-
 }
 
 
