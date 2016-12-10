@@ -47,20 +47,14 @@ class HeroDetails extends React.Component {
 
 class App extends React.Component {
 
-    constructor(props){
-        super(props);
-
-        this.state = {
-            name: ''
-        };
-    }
-
     componentWillMount(){
         let heroData = localStorage.getItem('heroData');
 
         if (heroData){
             heroData = JSON.parse(heroData);
             this.setState(heroData);
+        } else {
+            this.setState({});
         }
     }
 
@@ -86,7 +80,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <h1 className="hello">Hello, {this.state.name}</h1>
+                <h1 className="hello">Who r u bro?</h1>
 
                 {
                     this.state.name
